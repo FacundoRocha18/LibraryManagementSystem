@@ -24,7 +24,6 @@
 					string newBook = Console.ReadLine() ?? string.Empty;
 
 					OperationResult addResult = BookInventory.Add(newBook);
-
 					Console.WriteLine(addResult.Message);
 
 					break;
@@ -46,7 +45,7 @@
 						Console.WriteLine("No books in inventory.");
 						continue;
 					}
-					
+
 					Console.WriteLine("Books in inventory:");
 					foreach (string book in books)
 					{

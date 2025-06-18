@@ -8,7 +8,6 @@ public static class BookInventory
 
 		if (!validationResult.IsValid)
 		{
-			Console.WriteLine(validationResult.Message);
 			return new(false, validationResult.Message);
 		}
 
@@ -33,7 +32,6 @@ public static class BookInventory
 
 		if (!validationResult.IsValid)
 		{
-			Console.WriteLine(validationResult.Message);
 			return new(false, validationResult.Message);
 		}
 
