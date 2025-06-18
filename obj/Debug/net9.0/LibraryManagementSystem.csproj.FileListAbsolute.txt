@@ -12,3 +12,4 @@
 /Users/facundorocha/Documents/Code/Coursera/LibraryManagementSystem/obj/Debug/net9.0/LibraryManagementSystem.pdb
 /Users/facundorocha/Documents/Code/Coursera/LibraryManagementSystem/obj/Debug/net9.0/LibraryManagementSystem.genruntimeconfig.cache
 /Users/facundorocha/Documents/Code/Coursera/LibraryManagementSystem/obj/Debug/net9.0/ref/LibraryManagementSystem.dll
+/Users/facundorocha/Documents/Code/Coursera/LibraryManagementSystem/obj/Debug/net9.0/LibraryManagementSystem.sourcelink.json

@@ -1,34 +1,59 @@
 public static class BookInventory
 {
-	private static List<string> books = new List<string>(5);
+	private static readonly List<string> books = new(5);
 
-	public static void AddBook(string book)
+	public static OperationResult Add(string title)
 	{
-		if (books.Count < 5)
+		ValidationResult validationResult = Validation.IsValidBookName(title);
+
+		if (!validationResult.IsValid)
 		{
-			books.Add(book);
-			Console.WriteLine($"Book '{book}' added to inventory.");
+			Console.WriteLine(validationResult.Message);
+			return new(false, validationResult.Message);
 		}
-		else
+
+		if (IsFull())
 		{
-			Console.WriteLine("Inventory is full. Cannot add more books.");
+			return new(false, "Inventory is full. Cannot add more books.");
 		}
+
+		if (books.Contains(title))
+		{
+			return new(false, $"Book '{title}' already exists in inventory.");
+		}
+
+		books.Add(title);
+
+		return new(true, $"Book '{title}' added to inventory.");
 	}
 
-	public static void RemoveBook(string book)
+	public static OperationResult Remove(string title)
 	{
-		if (books.Remove(book))
+		ValidationResult validationResult = Validation.IsValidBookName(title);
+
+		if (!validationResult.IsValid)
 		{
-			Console.WriteLine($"Book '{book}' removed from inventory.");
+			Console.WriteLine(validationResult.Message);
+			return new(false, validationResult.Message);
 		}
-		else
+
+		if (!books.Remove(title))
 		{
-			Console.WriteLine($"Book '{book}' not found in inventory.");
+			return new(false, $"Book '{title}' not found in inventory.");
 		}
+
+		return new(true, $"Book '{title}' removed from inventory.");
 	}
+
+	private static bool IsFull() => books.Count >= 5;
 
 	public static string[] GetBooks()
 	{
-		return books.ToArray();
-	}	
+		if (books.Count == 0)
+		{
+			return [];
+		}
+
+		return [.. books];
+	}
 }
