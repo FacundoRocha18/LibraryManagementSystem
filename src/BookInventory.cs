@@ -4,7 +4,8 @@ public static class BookInventory
 
 	public static OperationResult Add(string title)
 	{
-		ValidationResult validationResult = Validation.IsValidBookName(title);
+		string normalizedTitle = title.Trim().ToLowerInvariant();
+		ValidationResult validationResult = Validation.IsValidBookName(normalizedTitle);
 
 		if (!validationResult.IsValid)
 		{
@@ -16,14 +17,14 @@ public static class BookInventory
 			return new(false, "Inventory is full. Cannot add more books.");
 		}
 
-		if (books.Contains(title))
+		if (books.Contains(normalizedTitle))
 		{
-			return new(false, $"Book '{title}' already exists in inventory.");
+			return new(false, $"Book '{normalizedTitle}' already exists in inventory.");
 		}
 
-		books.Add(title);
+		books.Add(normalizedTitle);
 
-		return new(true, $"Book '{title}' added to inventory.");
+		return new(true, $"Book '{normalizedTitle}' added to inventory.");
 	}
 
 	public static OperationResult Remove(string title)
