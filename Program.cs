@@ -26,6 +26,14 @@
 					ShowBooks();
 					break;
 
+				case 4:
+					SearchBook();
+					break;
+
+				case 5:
+					BorrowBook();
+					break;
+
 				case 0:
 					Console.WriteLine("Exiting the program. Goodbye!");
 					return;
@@ -43,6 +51,8 @@
 		Console.WriteLine("1 – Add a new book.");
 		Console.WriteLine("2 – Remove a book.");
 		Console.WriteLine("3 – Show all books.");
+		Console.WriteLine("4 – Search for a book.");
+		Console.WriteLine("5 – Borrow a book.");
 		Console.WriteLine("0 – Exit.");
 		Console.Write("> Chosen option: ");
 	}
@@ -52,13 +62,7 @@
 		Console.Write("Enter the book name to add: ");
 		string newBook = (Console.ReadLine() ?? string.Empty).Trim();
 
-		if (string.IsNullOrWhiteSpace(newBook))
-		{
-			Console.WriteLine("Book name cannot be empty.");
-			return;
-		}
-
-		OperationResult addResult = BookInventory.Add(newBook);
+		OperationResult<string> addResult = BookInventory.Add(newBook);
 		Console.WriteLine(addResult.Message);
 	}
 
@@ -67,7 +71,7 @@
 		Console.Write("Enter the book name to remove: ");
 		string bookToRemove = Console.ReadLine() ?? string.Empty;
 
-		OperationResult removeResult = BookInventory.Remove(bookToRemove);
+		OperationResult<string> removeResult = BookInventory.Remove(bookToRemove);
 		Console.WriteLine(removeResult.Message);
 	}
 
@@ -75,16 +79,33 @@
 	{
 		string[] books = BookInventory.GetBooks();
 
-		if (books.Length == 0)
-		{
-			Console.WriteLine("No books in inventory.");
-			return;
-		}
+
 
 		Console.WriteLine("Books in inventory:");
 		foreach (string book in books)
 		{
 			Console.WriteLine($"- {book}");
 		}
+	}
+
+	private static void SearchBook()
+	{
+		Console.Write("Enter the book name to search: ");
+		string bookToSearch = Console.ReadLine() ?? string.Empty;
+
+		OperationResult<string> result = BookInventory.SearchBook(bookToSearch);
+		Console.WriteLine(result.Message);
+	}
+
+	private static void BorrowBook()
+	{
+		Console.Write("Enter your name: ");
+		string user = Console.ReadLine() ?? string.Empty;
+
+		Console.Write("Enter the book name to borrow: ");
+		string bookToBorrow = Console.ReadLine() ?? string.Empty;
+
+		OperationResult<string> result = BookInventory.BorrowBook(user, bookToBorrow);
+		Console.WriteLine(result.Message);
 	}
 }

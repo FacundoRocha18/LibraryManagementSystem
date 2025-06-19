@@ -1,11 +1,15 @@
 public static class BookInventory
 {
 	private static readonly List<string> books = new(5);
+	private static readonly Dictionary<string, List<string>> borrowedBooks = new();
+	private static readonly int maxBookInventorySize = 5;
+	private static readonly int maxBorrowedBooks = 3;
 
-	public static OperationResult Add(string title)
+	public static OperationResult<string> Add(string title)
 	{
-		string normalizedTitle = title.Trim().ToLowerInvariant();
-		ValidationResult validationResult = Validation.IsValidBookName(normalizedTitle);
+		string normalizedTitle = Normalize(title);
+
+		ValidationResult validationResult = Validation.IsValidTitle(normalizedTitle);
 
 		if (!validationResult.IsValid)
 		{
@@ -27,24 +31,24 @@ public static class BookInventory
 		return new(true, $"Book '{normalizedTitle}' added to inventory.");
 	}
 
-	public static OperationResult Remove(string title)
+	public static OperationResult<string> Remove(string title)
 	{
-		ValidationResult validationResult = Validation.IsValidBookName(title);
+		string normalizedTitle = Normalize(title);
+
+		ValidationResult validationResult = Validation.IsValidTitle(normalizedTitle);
 
 		if (!validationResult.IsValid)
 		{
 			return new(false, validationResult.Message);
 		}
 
-		if (!books.Remove(title))
+		if (!books.Remove(normalizedTitle))
 		{
-			return new(false, $"Book '{title}' not found in inventory.");
+			return new(false, $"Book '{normalizedTitle}' not found in inventory.");
 		}
 
-		return new(true, $"Book '{title}' removed from inventory.");
+		return new(true, $"Book '{normalizedTitle}' removed from inventory.");
 	}
-
-	private static bool IsFull() => books.Count >= 5;
 
 	public static string[] GetBooks()
 	{
@@ -55,4 +59,64 @@ public static class BookInventory
 
 		return [.. books];
 	}
+
+	public static OperationResult<string> SearchBook(string title)
+	{
+		string normalizedTitle = Normalize(title);
+
+		ValidationResult validationResult = Validation.IsValidTitle(normalizedTitle);
+
+		if (!validationResult.IsValid)
+		{
+			return new(false, validationResult.Message);
+		}
+
+		if (!books.Contains(normalizedTitle))
+		{
+			return new(false, $"Book '{normalizedTitle}' not found in inventory.");
+		}
+
+		return new(true, $"Book '{normalizedTitle}' found in inventory.", normalizedTitle);
+	}
+
+	public static OperationResult<string> BorrowBook(string user, string title)
+	{
+		string normalizedTitle = Normalize(title);
+		string normalizedUser = Normalize(user);
+
+		ValidationResult validation = Validation.IsValidTitle(normalizedTitle);
+		if (!validation.IsValid)
+		{
+			return new(false, validation.Message);
+		}
+
+		if (!books.Contains(normalizedTitle))
+		{
+			return new(false, $"Book '{normalizedTitle}' not found in inventory.");
+		}
+
+		if (!borrowedBooks.ContainsKey(normalizedUser))
+		{
+			borrowedBooks[normalizedUser] = new();
+		}
+
+		if (borrowedBooks[normalizedUser].Count >= maxBorrowedBooks)
+		{
+			return new(false, $"User '{normalizedUser}' has already borrowed {maxBorrowedBooks} books.");
+		}
+
+		if (borrowedBooks[normalizedUser].Contains(normalizedTitle))
+		{
+			return new(false, $"User '{normalizedUser}' has already borrowed '{normalizedTitle}'.");
+		}
+
+		// Remove from inventory and add to borrowed list
+		books.Remove(normalizedTitle);
+		borrowedBooks[normalizedUser].Add(normalizedTitle);
+
+		return new(true, $"User '{normalizedUser}' borrowed '{normalizedTitle}'.", normalizedTitle);
+	}
+
+	private static string Normalize(string str) => str.Trim().ToLowerInvariant();
+	private static bool IsFull() => books.Count >= maxBookInventorySize;
 }
