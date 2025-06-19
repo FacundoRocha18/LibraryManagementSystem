@@ -2,22 +2,16 @@ public static class Validation
 {
 	private static readonly int maxTitleLength = 100;
 	private static readonly int maxNameLength = 50;
-	
-	public static ValidationResult IsValidTitle(string title)
-	{
-		return RunValidations(
-			ValidateNonEmpty(title, "Title cannot be empty."),
-			ValidateLength(title, maxTitleLength, $"Title is too long. Maximum length is {maxTitleLength} characters.")
-		);
-	}
 
-	public static ValidationResult IsValidUserName(string name)
-	{
-		return RunValidations(
-			ValidateNonEmpty(name, "Name cannot be empty."),
-			ValidateLength(name, maxTitleLength, $"Name is too long. Maximum length is {maxNameLength} characters.")
-		);
-	}
+	public static ValidationResult IsValidTitle(string title) => RunValidations(
+		ValidateNonEmpty(title, "Title cannot be empty."),
+		ValidateLength(title, maxTitleLength, $"Title is too long. Maximum length is {maxTitleLength} characters.")
+	);
+
+	public static ValidationResult IsValidUserName(string name) => RunValidations(
+		ValidateNonEmpty(name, "Name cannot be empty."),
+		ValidateLength(name, maxTitleLength, $"Name is too long. Maximum length is {maxNameLength} characters.")
+	);
 
 	private static ValidationResult RunValidations(params ValidationResult[] checks)
 	{
