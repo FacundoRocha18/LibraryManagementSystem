@@ -4,7 +4,7 @@ public static class Validation
 	private static readonly int maxNameLength = 50;
 	public static ValidationResult IsValidTitle(string title)
 	{
-		ValidationResult? result = null;
+		ValidationResult? result;
 
 		result = ValidateNonEmpty(title, "Title cannot be empty.");
 
@@ -25,7 +25,7 @@ public static class Validation
 
 	public static ValidationResult IsValidUserName(string name)
 	{
-		ValidationResult? result = null;
+		ValidationResult? result;
 
 		result = ValidateNonEmpty(name, "Name cannot be empty.");
 
