@@ -34,6 +34,10 @@
 					BorrowBook();
 					break;
 
+				case 6:
+					ReturnBook();
+					break;
+
 				case 0:
 					Console.WriteLine("Exiting the program. Goodbye!");
 					return;
@@ -53,6 +57,7 @@
 		Console.WriteLine("3 – Show all books.");
 		Console.WriteLine("4 – Search for a book.");
 		Console.WriteLine("5 – Borrow a book.");
+		Console.WriteLine("6 – Return a book.");
 		Console.WriteLine("0 – Exit.");
 		Console.Write("> Chosen option: ");
 	}
@@ -104,6 +109,18 @@
 		string bookToBorrow = Console.ReadLine() ?? string.Empty;
 
 		OperationResult<string> result = BookInventory.BorrowBook(user, bookToBorrow);
+		Console.WriteLine(result.Message);
+	}
+
+	private static void ReturnBook()
+	{
+		Console.Write("Enter your name: ");
+		string user = Console.ReadLine() ?? string.Empty;
+
+		Console.Write("Enter book title to return: ");
+		string title = Console.ReadLine() ?? string.Empty;
+
+		var result = BookInventory.ReturnBook(user, title);
 		Console.WriteLine(result.Message);
 	}
 }
