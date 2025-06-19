@@ -38,6 +38,10 @@
 					ReturnBook();
 					break;
 
+				case 7:
+					ShowBorrowedBooks();
+					break;
+
 				case 0:
 					Console.WriteLine("Exiting the program. Goodbye!");
 					return;
@@ -58,6 +62,7 @@
 		Console.WriteLine("4 – Search for a book.");
 		Console.WriteLine("5 – Borrow a book.");
 		Console.WriteLine("6 – Return a book.");
+		Console.WriteLine("7 – Show borrowed books.");
 		Console.WriteLine("0 – Exit.");
 		Console.Write("> Chosen option: ");
 	}
@@ -122,5 +127,22 @@
 
 		var result = BookInventory.ReturnBook(user, title);
 		Console.WriteLine(result.Message);
+	}
+
+	private static void ShowBorrowedBooks()
+	{
+		var borrowed = BookInventory.GetBorrowedBooks();
+
+		if (borrowed.Count == 0)
+		{
+			Console.WriteLine("No books are currently borrowed.");
+			return;
+		}
+
+		Console.WriteLine("Borrowed books:");
+		foreach (var entry in borrowed)
+		{
+			Console.WriteLine($"{entry.Key}: {string.Join(", ", entry.Value)}");
+		}
 	}
 }

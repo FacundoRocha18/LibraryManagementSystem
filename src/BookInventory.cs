@@ -118,42 +118,44 @@ public static class BookInventory
 	}
 
 	public static OperationResult<string> ReturnBook(string user, string title)
-{
-	string normalizedUser = Normalize(user);
-	string normalizedTitle = Normalize(title);
-
-	// Validación del título
-	ValidationResult validation = Validation.IsValidTitle(normalizedTitle);
-	if (!validation.IsValid)
 	{
-		return new(false, validation.Message);
+		string normalizedUser = Normalize(user);
+		string normalizedTitle = Normalize(title);
+
+		ValidationResult validation = Validation.IsValidTitle(normalizedTitle);
+		if (!validation.IsValid)
+		{
+			return new(false, validation.Message);
+		}
+
+		if (!borrowedBooks.ContainsKey(normalizedUser))
+		{
+			return new(false, $"User '{normalizedUser}' has no borrowed books.");
+		}
+
+		if (!borrowedBooks[normalizedUser].Contains(normalizedTitle))
+		{
+			return new(false, $"Book '{normalizedTitle}' is not checked out by user '{normalizedUser}'.");
+		}
+
+		borrowedBooks[normalizedUser].Remove(normalizedTitle);
+
+		if (!IsFull())
+		{
+			books.Add(normalizedTitle);
+			return new(true, $"Book '{normalizedTitle}' returned by user '{normalizedUser}'.", normalizedTitle);
+		}
+
+		return new(true, $"Book '{normalizedTitle}' returned by user '{normalizedUser}', but inventory is full. It was not re-added.", normalizedTitle);
 	}
 
-	// Verifica si el usuario existe en el diccionario de préstamos
-	if (!borrowedBooks.ContainsKey(normalizedUser))
+	public static Dictionary<string, List<string>> GetBorrowedBooks()
 	{
-		return new(false, $"User '{normalizedUser}' has no borrowed books.");
+		return borrowedBooks.ToDictionary(
+			entry => entry.Key,
+			entry => new List<string>(entry.Value)
+		);
 	}
-
-	// Verifica si el usuario efectivamente tomó prestado ese libro
-	if (!borrowedBooks[normalizedUser].Contains(normalizedTitle))
-	{
-		return new(false, $"Book '{normalizedTitle}' is not checked out by user '{normalizedUser}'.");
-	}
-
-	// Eliminar el libro del registro del usuario
-	borrowedBooks[normalizedUser].Remove(normalizedTitle);
-
-	// Si el inventario no está lleno, lo agregamos de nuevo
-	if (!IsFull())
-	{
-		books.Add(normalizedTitle);
-		return new(true, $"Book '{normalizedTitle}' returned by user '{normalizedUser}'.", normalizedTitle);
-	}
-
-	// Si está lleno, avisamos que se devolvió pero no se pudo reingresar
-	return new(true, $"Book '{normalizedTitle}' returned by user '{normalizedUser}', but inventory is full. It was not re-added.", normalizedTitle);
-}
 
 	private static string Normalize(string str) => str.Trim().ToLowerInvariant();
 	private static bool IsFull() => books.Count >= maxBookInventorySize;
