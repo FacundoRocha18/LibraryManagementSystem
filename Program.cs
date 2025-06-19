@@ -79,8 +79,6 @@
 	{
 		string[] books = BookInventory.GetBooks();
 
-
-
 		Console.WriteLine("Books in inventory:");
 		foreach (string book in books)
 		{

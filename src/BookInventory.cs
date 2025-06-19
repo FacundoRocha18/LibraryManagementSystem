@@ -97,7 +97,7 @@ public static class BookInventory
 
 		if (!borrowedBooks.ContainsKey(normalizedUser))
 		{
-			borrowedBooks[normalizedUser] = new();
+			borrowedBooks[normalizedUser] = [];
 		}
 
 		if (borrowedBooks[normalizedUser].Count >= maxBorrowedBooks)
