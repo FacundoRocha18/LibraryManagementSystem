@@ -2,46 +2,31 @@ public static class Validation
 {
 	private static readonly int maxTitleLength = 100;
 	private static readonly int maxNameLength = 50;
+	
 	public static ValidationResult IsValidTitle(string title)
 	{
-		ValidationResult? result;
-
-		result = ValidateNonEmpty(title, "Title cannot be empty.");
-
-		if (!result.IsValid)
-		{
-			return result;
-		}
-
-		result = ValidateLength(title, maxTitleLength, $"Title is too long. Maximum length is {maxTitleLength} characters.");
-
-		if (!result.IsValid)
-		{
-			return result;
-		}
-
-		return new ValidationResult(true, "Title is valid.");
+		return RunValidations(
+			ValidateNonEmpty(title, "Title cannot be empty."),
+			ValidateLength(title, maxTitleLength, $"Title is too long. Maximum length is {maxTitleLength} characters.")
+		);
 	}
 
 	public static ValidationResult IsValidUserName(string name)
 	{
-		ValidationResult? result;
+		return RunValidations(
+			ValidateNonEmpty(name, "Name cannot be empty."),
+			ValidateLength(name, maxTitleLength, $"Name is too long. Maximum length is {maxNameLength} characters.")
+		);
+	}
 
-		result = ValidateNonEmpty(name, "Name cannot be empty.");
-
-		if (!result.IsValid)
+	private static ValidationResult RunValidations(params ValidationResult[] checks)
+	{
+		foreach (var check in checks)
 		{
-			return result;
+			if (!check.IsValid)
+				return check;
 		}
-
-		result = ValidateLength(name, maxNameLength, $"Name is too long. Maximum length is {maxNameLength} characters.");
-
-		if (!result.IsValid)
-		{
-			return result;
-		}
-
-		return new ValidationResult(true, "Name is valid.");
+		return new ValidationResult(true, "All validations passed.");
 	}
 
 	private static ValidationResult ValidateNonEmpty(string? value, string errorMessage)

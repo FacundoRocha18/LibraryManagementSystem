@@ -84,10 +84,16 @@ public static class BookInventory
 		string normalizedTitle = Normalize(title);
 		string normalizedUser = Normalize(user);
 
-		ValidationResult validation = Validation.IsValidTitle(normalizedTitle);
-		if (!validation.IsValid)
+		ValidationResult titleValidation = Validation.IsValidTitle(normalizedTitle);
+		if (!titleValidation.IsValid)
 		{
-			return new(false, validation.Message);
+			return new(false, titleValidation.Message);
+		}
+
+		ValidationResult userValidation = Validation.IsValidUserName(normalizedUser);
+		if (!userValidation.IsValid)
+		{
+			return new(false, userValidation.Message);
 		}
 
 		if (!books.Contains(normalizedTitle))
@@ -119,13 +125,19 @@ public static class BookInventory
 
 	public static OperationResult<string> ReturnBook(string user, string title)
 	{
-		string normalizedUser = Normalize(user);
 		string normalizedTitle = Normalize(title);
+		string normalizedUser = Normalize(user);
 
-		ValidationResult validation = Validation.IsValidTitle(normalizedTitle);
-		if (!validation.IsValid)
+		ValidationResult titlevalidation = Validation.IsValidTitle(normalizedTitle);
+		if (!titlevalidation.IsValid)
 		{
-			return new(false, validation.Message);
+			return new(false, titlevalidation.Message);
+		}
+
+		ValidationResult userValidation = Validation.IsValidUserName(normalizedUser);
+		if (!userValidation.IsValid)
+		{
+			return new(false, userValidation.Message);
 		}
 
 		if (!borrowedBooks.ContainsKey(normalizedUser))
