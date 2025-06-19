@@ -1,0 +1,40 @@
+# Build Folders (bin, obj)
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code settings
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# NuGet packages
+*.nupkg
+packages/
+*.snupkg
+
+# Rider project files
+.idea/
+
+# Logs
+*.log
+
+# Test results
+TestResults/
+
+# Publish output
+publish/
+
+# Others
+*.vspscc
+*.vssscc
+_ReSharper*/
+*.resharper
+*.DotSettings.user

@@ -1,4 +1,4 @@
-﻿public class LibraryManagementSystem
+﻿public class LibraryManager
 {
 	public static void Main()
 	{
